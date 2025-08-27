@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
+ 
+{% block css %}
+<link rel="stylesheet" href="/static/css/mydba.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+{% endblock %}
+
+{% block title %}tables{% endblock %}
+
+{% block content %}
+<div id="table-container" data-table-name="{{ table_name }}"></div>
+<div class="dashboard">
+    <div class="main-inline-container">
+        <h1>myDBA</h1>        
+    </div>
+    <h3>{{table_name}} <a href="/myDBA/delete/{{table_name}}">Empty</a></h3>
+    <table id="dynamic-table" border="1">
+        <thead>
+            <tr id="table-header"></tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+    <div id="loadingIndicator" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+</div>
+
+<div id="editModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Edit table</h2>
+        <form id="edittableForm">
+            <input type="hidden" name="id" id="edittableId">
+            <div class="inline-container">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="editName" placeholder="Name">
+            </div>
+            <div class="inline-container">
+                <label for="name">Email</label>
+                <input type="email" name="email" id="edittableEmail" placeholder="Email">
+            </div>
+            <div class="inline-container">
+                <label for="name">Role</label>
+                <select name="role" id="editRole">
+                    <option value="admin">Admin</option>
+                    <option value="table">table</option>
+                    <option value="annotator">Annotator</option>
+                </select>
+            </div>
+            <div class="inline-container">
+                <label for="name">Is Verified</label>
+                <select name="is_verified" id="is_verified">
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+            </div>
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+
+<div id="addtableModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Add table</h2>
+        <form id="addtableForm">
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <div class="inline-container">
+                <select name="role">
+                    <option value="admin">Admin</option>
+                    <option value="table">table</option>
+                    <option value="annotator">Annotator</option>
+                </select>
+            </div>
+            <div class="inline-container">
+                <select name="is_verified">
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+            </div>
+            <button type="submit">Add table</button>
+        </form>
+    </div>
+</div>
+<script src="/static/js/mydba-table.js"></script>
+
+{% endblock %}

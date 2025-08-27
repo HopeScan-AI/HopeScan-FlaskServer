@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Hope Scan</title>
+    <link rel="stylesheet" href="/static/css/sign-up.css"> <!-- Link to your CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+    <div class="sign-up-container">
+        <h2>Sign Up</h2>
+
+        <!-- Sign Up Form -->
+        <form id="signUpForm" method="POST" action="/auth/signup">
+            <div class="toggle-buttons">
+                <button id="userBtn" class="active">User</button>
+                <button id="institutionBtn">Institution</button>
+            </div>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" required>
+            </div>
+            <input type="hidden" id="role" name="role" value="user">
+            <input type="hidden" id="is_verified" name="is_verified" value="false">
+
+            <button type="submit" class="submit-btn">Sign Up</button>
+        </form>
+
+        <!-- Google Sign-Up Button -->
+        <div class="google-sign-up">
+            <button id="googleSignUpBtn">
+                <span class="google-logo">G</span> Sign Up with Google
+            </button>
+        </div>
+
+        <div class="signin-link">
+            <p>Already have an account? <a href="/auth/signin/page">Sign in here</a></p>
+        </div>
+        <div class="signin-link">
+            <p>Have a verification code? <a href="/auth/verification-page">Verify Here</a></p>
+        </div>
+    </div>
+
+    <script src="/static/js/sign-up.js"></script> <!-- Link to your JS -->
+</body>
+</html>

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  const caseId = "{{ case.id }}";
+</script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/show-case.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+{% endblock %}
+
+{% block title %}Case{% endblock %}
+
+{% block content %}
+<section id="case-details" class="details-section">
+  <div class="container">
+    <h2>Case Information</h2>
+    <div class="case-info">
+      <p><strong>Name:</strong> {{case.name}}</p>
+      <p><strong>Create Date:</strong> {{case.create_date}}</p>
+      <p><strong>Comments:</strong> {{case.comments}}</p>
+    </div>
+    <div class="button-container">
+      <button class="add-image-btn" id="add-image-btn">Add Image</button>
+      <!-- <button class="add-image-btn" id="change-owner">Change Owner</button> -->
+    </div>
+
+  </div>
+</section>
+
+<!-- Images Section -->
+<section id="case-images" class="images-section">
+  <div class="container">
+    <h2>Images</h2>
+    <div id="spinner" class="spinner"></div>
+    <div class="image-grid" id="image-container">
+    </div>
+  </div>
+
+  <div id="change-owner-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h2>Change Owner</h2>
+      <form id="newOwnerForm">
+        <div class="inline-container">
+          <label for="email">New Owner Email</label>
+          <input type="text" name="email" placeholder="Email" required>
+          <input type="text" name="case_id" value="{{case.id}}" hidden required>
+        </div>
+        <button type="submit">Change</button>
+      </form>
+    </div>
+  </div>
+
+</section>
+
+
+<script>
+
+  // Make sure the case ID is passed from the Jinja2 template correctly
+  document.getElementById("add-image-btn").addEventListener("click", function () {
+    // Jinja2 variable to insert case id
+    window.location.href = `/images/page/${caseId}`;  // Redirect to the desired page
+  });
+</script>
+<script src="/static/js/show-case.js"></script>
+
+{% endblock %}

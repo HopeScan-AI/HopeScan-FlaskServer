@@ -1,0 +1,283 @@
+/* General Dashboard Styling */
+.dashboard {
+    padding: 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9fafb;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    margin-top: 80px; /* Adjust this value to match the header height */
+}
+
+/* Table Styling */
+table {
+    /*width: 100%;*/
+    border-collapse: collapse;
+    margin: 0px 0px 20px 0px;
+}
+
+th, td {
+    padding: 12px; /* Increased padding for better readability */
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #009688; /* Consistent theme blue for table headers */
+    color: white;
+}
+
+td {
+    background-color: #ffffff; /* White background for table data cells */
+}
+
+button {
+    padding: 8px 15px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    background-color: #009688;
+    color: white;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Button hover effect */
+button:hover {
+    background-color: #00796b;
+    transform: scale(1.05);
+}
+
+/* Button active effect */
+button:active {
+    background-color: #00796b;
+    transform: scale(0.95);
+}
+
+/* Modal container */
+.modal {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Dimmed background */
+}
+
+/* Modal content */
+.modal-content {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    width: 450px; /* Adjust width */
+    max-width: 100%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Modal header */
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+}
+
+/* Form inputs in modal */
+.modal-content input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* Save Changes button */
+.modal-content button {
+    background-color: #009688;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 18px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Button hover effect */
+.modal-content button:hover {
+    background-color: #00796b;
+    transform: scale(1.05);
+}
+
+/* Button active effect */
+.modal-content button:active {
+    background-color: #00796b;
+    transform: scale(0.95);
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+.main-inline-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px; /* Increased gap */
+}
+
+.inline-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px; /* Reduced spacing between fields */
+}
+
+.inline-container label {
+    font-size: 14px; /* Smaller font size for labels */
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 3px; /* Reduced spacing between label and input */
+}
+
+.inline-container input,
+.inline-container select {
+    padding: 8px 12px; /* Reduced padding for a smaller appearance */
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px; /* Smaller font size for inputs and selects */
+    width: 100%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.inline-container input:focus,
+.inline-container select:focus {
+    border-color: #007BFF; /* Highlight border on focus */
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.4); /* Subtle blue shadow */
+}
+
+/* Styled Buttons for inline actions */
+button {
+    padding: 10px 20px;
+    background-color: #009688;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for buttons */
+button:hover {
+    background-color: #00796b;
+}
+
+/* Active effect for buttons */
+.styled-button:active {
+    background-color: #00796b;
+    transform: scale(0.95); /* Slight shrink effect */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard {
+        padding: 20px;
+        margin-top: 50px;
+    }
+    
+    table {
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    .inline-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .inline-container label {
+        margin-bottom: 5px;
+    }
+
+    .modal-content {
+        width: 90%;
+        padding: 20px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard {
+        padding: 15px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    button {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .modal-content h2 {
+        font-size: 20px;
+    }
+
+    .modal-content input {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+#loadingIndicator {
+    display: none;
+    position: sticky;
+    /* left: 50%;
+    top: 50%; */
+    transform: translateX(50%); /* Only horizontal centering */
+    text-align: center;
+}
+
+.spinner {
+    border: 4px solid transparent;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+a{
+    text-decoration: none;
+    font-size: small;
+    font-weight: 400;
+}

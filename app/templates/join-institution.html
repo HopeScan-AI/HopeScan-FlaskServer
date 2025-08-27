@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Join Institution{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<style>
+  .invitation-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+  }
+
+  .invitation-card {
+    padding: 3rem 2rem;
+    background-color: #fff;
+    width: 85%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    text-align: center;
+  }
+
+  .invitation-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .invitation-card h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+
+  .invitation-card .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .invitation-card .button {
+    background-color: #009688;
+    color: white;
+    padding: 0.75rem 2rem;
+    border: none;
+    font-size: 1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+  }
+
+  .invitation-card .button:hover {
+    background-color: #004d40;
+  }
+
+  .invitation-card .button.decline {
+    background-color: #e57373;
+  }
+
+  .invitation-card .button.decline:hover {
+    background-color: #c62828;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="invitation-wrapper">
+  <div class="invitation-card">
+    <h2>Institution {{ provider.user.name }} is inviting you to join them</h2>
+    <div class="buttons">
+      <button class="button accept" onclick="respondToInvitation('accepted')">Accept</button>
+      <button class="button decline" onclick="respondToInvitation('declined')">Decline</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  function respondToInvitation(action) {
+    const data = {
+      user_id: "{{ provider.user.id }}",
+      provider_id: "{{ provider.provider.id }}",
+      action: action
+    };
+
+    // Send POST request using Fetch API
+    fetch('/provider/respond-invitation', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: `Filed to add provider ${response.errors}`,
+            icon: 'fail',
+            timer: 2000
+          })
+        }
+      })
+      .then(result => {
+        Swal.fire({
+          title: 'Response Submitted',
+          text: `Done`,
+          icon: 'success',
+          timer: 2000
+        }).then(() => {
+          window.location.href = "/?role={{provider.provider.role}}"
+        });
+      })
+      .catch(error => {
+        Swal.fire({
+          title: 'Error',
+          text: 'An error occurred while submitting your response. Please try again.',
+          icon: 'error'
+        });
+      });
+  }
+</script>
+{% endblock %}

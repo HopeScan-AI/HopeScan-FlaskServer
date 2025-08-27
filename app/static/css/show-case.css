@@ -1,0 +1,279 @@
+/* Section Styles */
+.details-section,
+.images-section {
+  padding: 3rem 2rem;
+  background-color: #fff;
+  margin: 2rem auto;
+  width: 85%;
+  max-width: 1100px;
+  border-radius: 10px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.details-section:hover,
+.images-section:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.details-section .container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.case-info p {
+  margin: 0.75rem 0;
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+/* Image Gallery Styles */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 90%;
+  max-height: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.image-card {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.image-card img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  object-fit: cover;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: #009688;
+  color: white;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+}
+
+footer p {
+  margin: 0;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .cta-button {
+    font-size: 1.1rem;
+  }
+
+  .details-section,
+  .images-section {
+    width: 95%;
+  }
+
+  .image-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+/* Section Styles */
+.details-section .container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 70px;
+  /* Match the header's height */
+
+}
+
+.case-info {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  /* Align the button to the right */
+  margin-top: 1rem;
+}
+
+.add-image-btn {
+  background-color: #009688;
+  color: white;
+  padding: 0.75rem 2rem;
+  border: none;
+  margin: 10px;
+  font-size: 1rem;
+  text-decoration: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-image-btn:hover {
+  background-color: #004d40;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .details-section .container {
+    flex-direction: column;
+  }
+
+  .button-container {
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .add-image-btn {
+    width: 100%;
+  }
+}
+
+/* Modal container */
+.modal {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Dimmed background */
+}
+
+/* Modal content */
+.modal-content {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  width: 450px;
+  /* Adjust width */
+  max-width: 100%;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Modal header */
+.modal-content h2 {
+  margin-bottom: 0px;
+  color: #333;
+  font-size: 24px;
+}
+
+.modal-content label {
+  margin-bottom: 0px;
+  color: #333;
+  font-size: 18px;
+}
+
+/* Form inputs in modal */
+.modal-content input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Save Changes button */
+.modal-content button {
+  background-color: #009688;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 12px 18px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Button hover effect */
+.modal-content button:hover {
+  background-color: #00796b;
+  transform: scale(1.05);
+}
+
+/* Button active effect */
+.modal-content button:active {
+  background-color: #00796b;
+  transform: scale(0.95);
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.card img {
+  max-width: 100%;
+  max-height: 60vh;
+  /* Adjust the height relative to the viewport */
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.spinner {
+  display: none;
+  width: 50px;
+  height: 50px;
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

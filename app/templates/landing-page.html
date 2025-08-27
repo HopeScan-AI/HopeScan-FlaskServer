@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+<script defer src="/static/js/landing-page.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/landing-page.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+{% endblock %}
+
+{% block title %}Home - Hope Scan{% endblock %}
+
+{% block content %}
+<div id="user-role" role="{{ role }}"></div>
+<section id="home" class="hero">
+    <div class="hero-slider">
+      <!-- Slide 1 -->
+      <div class="slide active">
+        <div class="hero-content">
+          <h1>Healthcare at its Best</h1>
+          <p>Your health is our top priority</p>
+          <a href="#contact" class="cta-button">Get in Touch</a>
+        </div>
+      </div>
+  
+      <!-- Slide 2 -->
+      <div class="slide">
+        <div class="hero-content">
+          <h1>Advanced Medical Technology</h1>
+          <p>State-of-the-art equipment for accurate diagnosis</p>
+          <a href="#contact" class="cta-button">Learn More</a>
+        </div>
+      </div>
+  
+      <!-- Slide 3 -->
+      <div class="slide">
+        <div class="hero-content">
+          <h1>Compassionate Care</h1>
+          <p>We provide care with compassion and expertise</p>
+          <a href="#contact" class="cta-button">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+ <!-- Service Section -->
+<section id="services" class="services">
+    <h2>Our Services</h2>
+    <div class="service-cards">
+      <div class="card">
+        <img data-src="/static/img/1.jpg" alt="Checkup" class="lazy-load">
+        <h3>General Checkup</h3>
+        <p>Comprehensive health exams to keep you healthy</p>
+      </div>
+      <div class="card">
+        <img data-src="/static/img/2.jpg" alt="Surgery" class="lazy-load">
+        <h3>Surgery</h3>
+        <p>Skilled surgeons performing the latest techniques</p>
+      </div>
+      <div class="card">
+        <img data-src="/static/img/3.jpg" alt="Emergency Care" class="lazy-load">
+        <h3>Emergency Care</h3>
+        <p>24/7 emergency care with modern facilities</p>
+      </div>
+    </div>
+  </section>
+  
+
+  <!-- About Us Section -->
+  <section id="about" class="about-us lazy-load-section">
+    <h2>About Us</h2>
+    <p>We are committed to providing exceptional healthcare services with a focus on patient care, professionalism, and advanced technology.</p>
+  </section>
+  
+  <!-- Contact Section -->
+  <section id="contact" class="contact lazy-load-section">
+    <h2>Contact Us</h2>
+    <form id="contact-form">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" name="name" required>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" required></textarea>
+      <button type="submit" class="submit-btn">Send Message</button>
+    </form>
+  </section>
+
+
+  <!-- Footer Section -->
+  <footer>
+    <p>&copy; 2025 Hope Scan | All Rights Reserved</p>
+  </footer>
+{% endblock %}

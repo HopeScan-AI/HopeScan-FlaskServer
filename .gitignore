@@ -1,0 +1,58 @@
+
+# weights files
+# *.keras
+*.h5
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env
+.envrc
+*.venv
+
+# Flask & Python logs
+# instance/
+*.log
+*.out
+*.err
+logs/
+
+# # Database
+# *.sqlite3
+# *.db
+# *.sqlite
+# migrations/
+
+# Flask-specific files
+# config.py
+settings.py
+.wsgi
+
+# Cache and temp files
+*.swp
+*.swo
+*.bak
+.DS_Store
+Thumbs.db
+
+# Node.js dependencies (if React is part of the project)
+node_modules/
+# dist/
+build/
+
+# Environment variables and secrets
+.env
+*.secret
+secrets.json
+
+# Pytest and coverage reports
+htmlcov/
+.coverage
+*.cover
+.pytest_cache/
+
+instance

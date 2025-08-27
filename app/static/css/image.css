@@ -1,0 +1,70 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f7fafc; /* Slightly lighter background */
+    color: #2d3748; /* Darker text for contrast */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.upload-container {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 450px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.upload-container:hover {
+    transform: scale(1.02); /* Slight zoom effect on hover */
+}
+
+.upload-container h1 {
+    margin-bottom: 25px;
+    font-size: 28px;
+    color: #009688; /* Change to a more vibrant blue */
+}
+
+.upload-container label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.upload-container input[type="file"] {
+    display: block;
+    margin: 0 auto 25px;
+    padding: 12px;
+    width: 100%;
+    border: 2px dashed #cbd5e0;
+    border-radius: 8px;
+    background: #f4f7fb;
+    cursor: pointer;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.upload-container input[type="file"]:hover {
+    border-color: #009688; /* Change to match the blue theme */
+}
+
+.upload-container button {
+    background-color: #009688; /* A fresh blue color */
+    color: #ffffff;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+.upload-container button:hover {
+    background-color: #00796b; /* Darker shade on hover */
+}
+

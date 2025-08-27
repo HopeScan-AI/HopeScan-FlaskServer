@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/results.css">
+{% endblock %}
+
+{% block title %}Results{% endblock %}
+
+{% block content %}
+<div class="results-container">
+    <div class="results-header">
+        <h1>Results</h1>
+        <div>
+            <button id="show-all" class="filter-btn">Show All</button>
+            <button id="filter-different" class="filter-btn">Show Different Diagnoses</button>
+        </div>
+    </div>
+
+    <table id="results-table" class="styled-table">
+        <thead>
+            <tr>
+                <th>Image Name</th>
+                <th>Old Diagnose</th>
+                <th>Normal</th>
+                <th>Benign</th>
+                <th>Malignant</th>
+                <th>Discard</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows go here -->
+        </tbody>
+    </table>
+    <div id="loadingIndicator" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+    <div class="pagination">
+        <button id="prev" class="pagination-btn">Previous</button>
+        <span id="page-num" class="page-num">1</span>
+        <button id="next" class="pagination-btn">Next</button>
+    </div>
+</div>
+<div id="customModal" class="custom-modal">
+    <div class="custom-modal-content">
+      <span class="custom-modal-close" id="closeModal">&times;</span>
+      <p><strong>Name:</strong> <span id="modalName"></span></p>
+      <p><strong>Old Diagnose:</strong> <span id="modalOldDiagnose"></span></p>
+  
+      <table id="modal-table" class="styled-table">
+          <thead>
+            <tr>
+                <th>User</th>
+                <th>Normal</th>
+                <th>Benign</th>
+                <th>Malignant</th>
+                <th>Discard</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+      </table>
+    </div>
+  </div>
+  
+<script src="/static/js/results.js"></script>
+
+{% endblock %}

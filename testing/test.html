@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lahza Payment</title>
+</head>
+
+<body>
+    <h2>Pay with Lahza</h2>
+    <form id="payment-form">
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" required />
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="text" id="amount" required />
+        </div>
+        <div class="form-submit">
+            <button type="submit">Pay</button>
+        </div>
+    </form>
+
+    <script src="https://js.lahza.io/inline.min.js"></script>
+    <script>
+        document.getElementById('payment-form').addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const lahza = new LahzaPopup();
+            lahza.newTransaction({
+                key: 'pk_test_1917q2DT6YNEg9EPoIozB6LtFksZqi7VZ',
+                email: document.getElementById("email").value,
+                currency: "USD",
+                amount: document.getElementById("amount").value * 100,
+                metadata: { "Test": "test" },
+                onSuccess: (transaction) => {
+                    let message = 'Payment complete! Reference: ' + transaction.reference;
+                    alert(message);
+                },
+                onCancel: () => {
+                    alert('Window closed.');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

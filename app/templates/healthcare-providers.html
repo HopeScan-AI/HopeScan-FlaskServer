@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/healthcare-provider.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+{% endblock %}
+
+{% block title %}Healthcare Providers{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="main-inline-container">
+        <h1>Health Care Providers</h1>
+        <div>
+            <button class="styled-button" id="addProviderBtn">Add Provider</button>
+        </div>
+    </div>
+    <table id="providersTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div id="loadingIndicator" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+</div>
+
+<div id="addProviderModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Add Health Care Provider</h2>
+        <form id="addProviderForm">
+            <input type="email" name="user_email" placeholder="Email" required>
+            <button type="submit">Add Provider</button>
+        </form>
+    </div>
+</div>
+<script src="/static/js/healthcare-provider.js"></script>
+
+{% endblock %}

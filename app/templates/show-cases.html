@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/show-cases.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+{% endblock %}
+
+{% block title %}Cases{% endblock %}
+
+{% block content %}
+<div class="container">
+    <input type="text" id="provider_id" value="{{provider.id}}" hidden>
+    <div class="inline-container">
+        {% if provider %}
+        <h1>{{ provider.name}} Cases</h1>
+        {% else %}
+        <h1>{{ user.name}} Cases</h1>
+        {% endif %}
+        <div>
+            <button class="styled-button" id="addCaseBtn">Add Case</button>
+        </div>
+    </div>
+    <table id="casesTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Create Date</th>
+                <th>Provider</th>
+                <th>Owner</th>
+                <th>Comments</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div id="loadingIndicator" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+</div>
+<div id="addCaseModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Add Case</h2>
+        <form id="addCaseForm">
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="date" name="create_date" id="uploadDate" placeholder="Create Date" required>
+            <input type="text" name="comments" placeholder="Comments">
+            <div>
+                <label for="owner">Owner</label>
+                <select name="owner_id" class="select-institution">
+                    {% for owner in owners %}
+                    <option value="{{ owner.user.id }}">{{ owner.user.name }}</option>
+                    {% endfor %}
+                    <option value="{{ user.id }}">{{ user.name }}</option>
+                </select>
+            </div>
+            <button type="submit">Add Case</button>
+        </form>
+    </div>
+</div>
+
+<div id="editModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Edit Case</h2>
+        <form id="editCaseForm">
+            <input type="hidden" name="id" id="editCaseId">
+            <div class="inline-container">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="editName" placeholder="Name">
+            </div>
+            <div class="inline-container">
+                <label for="name">Create Date</label>
+                <input type="date" name="create_date" id="editUploadDate" placeholder="Create Date">
+            </div>
+            <div class="inline-container">
+                <label for="name">Comments</label>
+                <input type="text" name="comments" id="editComments" placeholder="Comments">
+            </div>
+            <div class="inline-container">
+                <label for="name">Provider</label>
+                {% if user.role == "user"%}
+                <input type="text" name="provider" id="editProvider" placeholder="Provider" readonly>
+                {% else %}
+                <input type="text" name="provider" id="editProvider" placeholder="Provider">
+                {% endif %}
+            </div>
+            <div class="inline-container">
+                <label for="name">Owner</label>
+                <input type="text" name="owner" id="editOwner" placeholder="Owner">
+            </div>
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<script src="/static/js/show-cases.js"></script>
+{% endblock %}
