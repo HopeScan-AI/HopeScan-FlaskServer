@@ -1,12 +1,57 @@
-from flask import Blueprint, request, jsonify
-from .schema import *
-from app import db, logger
-from .service import *
-from flask_jwt_extended import jwt_required, get_current_user
- 
+import os
 
+import requests
+from flask import Blueprint, jsonify, redirect, request
+from flask_jwt_extended import get_current_user, jwt_required
+
+from app import db, logger
+from app.modules.subscriptions.payments import LAHZA_API_URL, LAHZA_SECRET_KEY
+from app.modules.subscriptions.schema import *
+from app.modules.subscriptions.service import *
 
 bp = Blueprint('subscription', __name__, url_prefix='/subscription')
+RESPONSE_TIMEOUT = int(os.getenv('RESPONSE_TIMEOUT', 10))
+
+@bp.post('/subscribe')
+@jwt_required()
+def subscribe():
+    try:
+        subscribe_data = PaymentCreate(**request.json)
+        user = get_current_user()
+        currency = "USD"
+
+        payload = {
+            "amount": subscribe_data.amount * 100,
+            "currency": currency,
+            "email": user.email,
+            "callback_url": "https://hopescan.ai/payment/callback",
+            "metadata": {
+                "user_id": user.id,
+                "plan_id": subscribe_data.plan_id,
+                "plan_type_id": subscribe_data.plan_type_id
+            }
+        }
+
+        headers = {
+            "Authorization": f"Bearer {LAHZA_SECRET_KEY}",
+            "Content-Type": "application/json",
+        }
+
+        response = requests.post(LAHZA_API_URL, json=payload, headers=headers, timeout=RESPONSE_TIMEOUT)
+        logger.info(f"response: {response}")
+        if not response.ok:
+            logger.error("Failed to initialize payment", str(response.text))
+            return jsonify({"error": "Failed to initialize payment", "details": response.text}), 400
+
+        resp_json = response.json()
+        payment_url = resp_json["data"]["authorization_url"]
+        logger.info(f"payment_url: {payment_url}")
+        return redirect(payment_url)
+
+    except Exception as e:
+        logger.error("Error in /subscribe", str(e))
+        return jsonify({"errors": str(e)}), 500
+
 
 @bp.post('/')
 @jwt_required()
@@ -42,9 +87,8 @@ def get_subscriptions():
 def get_subscription(subscription_id):
     try:
         user = get_current_user()
-        if user.role == "admin":
-            subscription = getSubscription(subscription_id, db)
-            
+        subscription = getSubscription(subscription_id, db)
+        if user.role == "admin" or subscription.user_id == user.id:
             return jsonify(subscription), 200
         else:
             return jsonify({"errors": "UNAUTORIZED"}), 401

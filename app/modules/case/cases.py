@@ -1,10 +1,12 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import get_current_user, jwt_required
 from pydantic import ValidationError
-from .schema import CaseCreate, ChangeOwner
+
 from app import db
-from .service import *
-from flask_jwt_extended import jwt_required, get_current_user
-from app.modules.providers.service import get_one_provider, get_one_provider_without_user
+from app.modules.case.schema import CaseCreate, ChangeOwner
+from app.modules.case.service import *
+from app.modules.providers.service import (get_one_provider,
+                                           get_one_provider_without_user)
 
 bp = Blueprint('case', __name__, url_prefix='/case')
 
@@ -14,18 +16,10 @@ bp = Blueprint('case', __name__, url_prefix='/case')
 def create_case():
     try:
         case_data = CaseCreate(**request.json)
-        # print(case_data)
         provider_id =  case_data.provider_id if case_data.provider_id else request.args.get('provider_id')
         owner_id =  case_data.owner_id
         user = get_current_user()
-        # if provider_id:
         saved_case = create(case_data, db, owner_id, provider_id)
-        # else:
-        #     if case_data.owner_id ==  user.id:
-        #         saved_case = create(case_data, db, user.id, user.id)
-        #     else:
-        #         print(case_data.owner_id)
-        #         saved_case = create(case_data, db, case_data.owner_id, user.id)
         return jsonify(saved_case.as_dict()), 201
     except ValidationError as e:
         return jsonify({"errors": e.errors()}), 400

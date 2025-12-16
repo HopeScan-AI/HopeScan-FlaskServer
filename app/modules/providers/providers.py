@@ -1,15 +1,15 @@
-# routes/user_routes.py
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import get_current_user, jwt_required
 from pydantic import ValidationError
-from .schema import ProviderCreate
-from app import db
-from .service import create, get_all_providers, get_one_provider, delete, update_provider
-from app.modules.user.service import get_user_by_email
-from flask_jwt_extended import jwt_required, get_current_user
-from app.modules.notifications.notification import create as create_notification
-from app.modules.notifications.schema import NotificationCreate
- 
 
+from app import db
+from app.modules.notifications.notification import \
+    create as create_notification
+from app.modules.notifications.schema import NotificationCreate
+from app.modules.providers.schema import ProviderCreate
+from app.modules.providers.service import (create, delete, get_all_providers,
+                                           get_one_provider, update_provider)
+from app.modules.user.service import get_user_by_email
 
 bp = Blueprint('provider', __name__, url_prefix='/provider')
 

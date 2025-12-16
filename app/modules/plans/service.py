@@ -1,11 +1,12 @@
-from flask import abort
-from .schema import *
-from app.models import Plans, PlanType
-from sqlalchemy.orm import joinedload
-from datetime import datetime, timedelta
 from collections import defaultdict
+from datetime import datetime, timedelta
+
+from flask import abort
+from sqlalchemy.orm import joinedload
 
 from app import logger
+from app.models import Plans, PlanType
+from app.modules.plans.schema import *
 
 
 def getPlans(db):
@@ -30,7 +31,6 @@ def getPlanType(plan_type_id: int, db):
 
 def createPlan(plan_data: PlanCreate, db):
     try:
-        # Create the Plan
         new_plan = Plans(
             name=plan_data.name,
             num_of_providers=plan_data.num_of_providers,
@@ -39,9 +39,7 @@ def createPlan(plan_data: PlanCreate, db):
             image_cost=plan_data.image_cost,
         )
         db.session.add(new_plan)
-        db.session.flush()  # Get the plan ID before committing
-
-        # Create the related PlanTypes
+        db.session.flush()
 
         if plan_data.plan_type:
             for pt in plan_data.plan_type:
@@ -55,8 +53,6 @@ def createPlan(plan_data: PlanCreate, db):
                 db.session.add(plan_type)
 
         db.session.commit()
-        # print(new_plan)
-        # print(new_plan.as_dict())
         return new_plan
     except Exception as e:
         logger.error(f"Failed to create plan and types: {e}")
@@ -72,11 +68,8 @@ def updatePlan(plan_id: int, update_data: PlanUpdate, db):
             if key != "plan_type":
                 setattr(plan, key, value)
 
-        # Handle updating plan types
         if update_data.plan_type:
-            # Clear existing plan types
             db.session.query(PlanType).filter_by(plan_id=plan.id).delete()
-            # Add new plan types
             for pt in update_data.plan_type:
                 plan_type = PlanType(
                     name=pt.get('name'),

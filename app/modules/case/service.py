@@ -1,7 +1,8 @@
 from flask import abort
-from app.models import Case
-from .schema import CaseCreate, CaseUpdate
 from sqlalchemy.orm import joinedload
+
+from app.models import Case
+from app.modules.case.schema import CaseCreate, CaseUpdate
 from app.modules.providers.service import get_one_provider, is_provider
 from app.modules.user.service import get_one_user, get_user_by_email
 
@@ -50,11 +51,6 @@ def get_all_provider_cases2(db, skip, limit, user_id, owner_id=None):
 
     return filtered_cases
 
-# def get_one_case(case_id, db, user_id):
-#     db_case = db.session.query(Case).filter(or_(Case.owner_id == user_id, Case.creator_id == user_id)).filter(Case.id == case_id).first()
-#     if db_case is None:
-#         abort(404, description="Case not found")
-#     return db_case
 def get_one_case_by_owner(case_id, db, user_id):
     db_case = db.session.query(Case).filter(Case.owner_id == user_id).filter(Case.id == case_id).first()
     if db_case is None:
@@ -99,27 +95,6 @@ def delete(case_id, db):
     else:
        abort(404, description="Case not found")
 
-
-# def change_owner(user, new_owner, case_id, db):
-#     new_user = get_one_user(new_owner, db)
-#     if not new_user: abort(404, description="New Owner not found")
-#     case = get_one_case(case_id, db, user.id)
-#     if user.role == "institution":
-#         if is_provider(new_user.id, user.id, db):
-#             case.creator_id = new_user.id
-#         else:
-#             case.creator_id = new_user.id
-#             case.owner_id = new_user.id
-#     else:
-#         if case.owner_id == user.id:
-#             case.creator_id = new_user.id
-#             case.owner_id = new_user.id
-#         else:
-#             abort(500, description="you are not the owner")
-    
-#     db.session.commit()
-#     db.session.refresh(case)
-#     return case
 
 def change_owner_by_email(user, change_owner_data, db):
     case = get_one_case_by_owner(change_owner_data.case_id, db, user.id)

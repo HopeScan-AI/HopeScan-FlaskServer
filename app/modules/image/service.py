@@ -1,4 +1,5 @@
 from flask import abort
+
 from app.models import Image
 
 
@@ -16,12 +17,10 @@ def create(image, db, case_id):
     return db_image
 
 def get_all_images(db, skip, limit, case_id):
-    # db_image =  db.query(Image).filter(Image.user_id == user_id).offset(skip).limit(limit).all()
     db_image =  db.session.query(Image).filter(Image.case_id == case_id).offset(skip).limit(limit).all()
     return db_image
 
 def get_one_image(image_id, db, case_id):
-    # db_image = db.query(Image).filter(Image.case_id == case_id).filter(Image.id == image_id).first()
     db_image = db.session.query(Image).filter(Image.case_id == case_id).filter(Image.id == image_id).first()
     if db_image is None:
         abort(404, description="Image not found")

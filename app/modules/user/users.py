@@ -1,12 +1,11 @@
-# routes/user_routes.py
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import get_current_user, jwt_required
 from pydantic import ValidationError
-from .schema import UserCreate, UserUpdate
-from app import db
-from .service import create, get_all_users, get_one_user, update, delete
-from flask_jwt_extended import jwt_required, get_current_user
- 
 
+from app import db
+from app.modules.user.schema import UserCreate, UserUpdate
+from app.modules.user.service import (create, delete, get_all_users,
+                                               get_one_user, update)
 
 bp = Blueprint('user', __name__, url_prefix='/user')    
 

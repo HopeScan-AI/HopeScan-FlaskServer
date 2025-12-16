@@ -1,6 +1,8 @@
 from flask import abort
-from .schema import NotificationCreate
+
 from app.models import Notification
+from app.modules.notifications.schema import NotificationCreate
+
 
 def create(notification: NotificationCreate, db):
     db_notification = Notification(

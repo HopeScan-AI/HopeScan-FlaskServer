@@ -1,26 +1,30 @@
 import hashlib
 import hmac
 import os
+import re
+from urllib.parse import urlparse
+
 import requests
-from flask import request, Blueprint, jsonify, abort
-from .service import subscriptionPayment
-from app import db
+from flask import Blueprint, abort, jsonify, request
+from flask_jwt_extended import get_current_user, jwt_required
+
+from app import db, logger
+from app.modules.subscriptions.service import subscriptionPayment
 
 bp = Blueprint('payment', __name__)
 
 
-# @bp.route('/webhook', methods=['POST'])
-# def handle_webhook():
-#     data = request.get_json()
-#     # Process the data or perform desired actions
-#     # ...
-#     return '200 OK'
+LAHZA_SECRET_KEY = os.getenv('LAHZA_SECRET_KEY', '')
+LAHZA_STATUS_URL = os.getenv('LAHZA_STATUS_URL', '')
+LAHZA_API_URL = os.getenv('LAHZA_API_URL', '')
 
-LAHZA_SECRET_KEY = os.getenv('LAHZA_SECRET_KEY')
-LAHZA_STATUS_URL = "https://api.lahza.io/transaction/verify/"
+raw_ips = os.getenv("LAHZA_ALLOWED_IPS", "")
+ALLOWED_IPS = {ip.strip() for ip in raw_ips.split(",") if ip.strip()}
 
+raw_domains = os.getenv("ALLOWED_DOMAINS", "")
+ALLOWED_DOMAINS = {domain.strip() for domain in raw_domains.split(",") if domain.strip()}
 
-ALLOWED_IPS = {"161.35.20.140", "165.227.134.20"}
+RESPONSE_TIMEOUT = int(os.getenv('RESPONSE_TIMEOUT', 10))
 
 def ip_whitelist(f):
     def decorated_function(*args, **kwargs):
@@ -40,37 +44,50 @@ def handle_webhook():
     hmac_digest = hmac.new(LAHZA_SECRET_KEY.encode(), payload, hashlib.sha256).hexdigest()
     if hmac.compare_digest(hmac_digest, signature):
         event = request.get_json()
-        if event.event == "charge.success":
+        logger.info(f"event: {event}")
+        if event.get("event") == "charge.success":
             subscriptionPayment(
-                payment_data=event.data,
+                payment_data=event.get("data"),
                 db= db
             )
             return jsonify({"message": "Webhook received", "status": "success"}), 200
 
-        return jsonify({"message": event.event, "status": "fail"}), 500
+        return jsonify({"message": event.get("event"), "status": "fail"}), 500
 
     return jsonify({"error": "Invalid signature"}), 403
 
 
-# @bp.route('/payment-callback', methods=['GET'])
-# def payment_callback():
-#     reference = request.args.get('reference')
-#     # Process and verify payment
-#     payment_id = data.get("payment_id")
-#     status = data.get("status")
-#     print("*"*100)
-#     print(request)
-#     print("*"*100)
-#     # Store payment status in your database (not implemented here)
-#     return jsonify({"message": "Callback received", "payment_id": payment_id, "status": status})
+@bp.route('/callback', methods=['GET'])
+def payment_callback():
+    reference = request.args.get('reference')
+    return jsonify({"message": "Callback received", "reference":reference})
+
 
 @bp.route('/verify/<reference>', methods=['GET'])
+@jwt_required()
 def get_payment_status(reference):
-    headers = {"Authorization": f"Bearer {LAHZA_SECRET_KEY}"}
-    try:
-        response = requests.get(f"{LAHZA_STATUS_URL}{reference}", headers=headers)
-        return jsonify(response.json()), response.status_code
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    user = get_current_user()
+    if user.role == "admin":
+        if not re.match(r'^[A-Za-z0-9_-]+$', reference):
+            return jsonify({"error": "Invalid reference format"}), 400
+
+        url = f"{LAHZA_STATUS_URL}{reference}"
+
+        if not validate_domain(url):
+            return jsonify({"error": "Untrusted payment provider domain"}), 403
+
+        headers = {"Authorization": f"Bearer {LAHZA_SECRET_KEY}"}
+        try:
+            response = requests.get(url, headers=headers, timeout=RESPONSE_TIMEOUT)
+            return jsonify(response.json()), response.status_code
+        except Exception as e:
+            logger.error(f"Payment verification error: {str(e)}")
+            return jsonify({"error": str(e)}), 500
+    return jsonify({"error": "you are not admin"}), 400
 
 
+def validate_domain(url: str) -> bool:
+    """Validate that the domain of the given URL is in the allowed list."""
+    parsed_url = urlparse(url)
+    hostname = parsed_url.hostname
+    return hostname in ALLOWED_DOMAINS

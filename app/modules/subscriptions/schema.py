@@ -1,11 +1,11 @@
-from pydantic import BaseModel
-from typing import Optional
 from datetime import date
+from typing import Optional
+
+from pydantic import BaseModel
 
 
 class PaymentCreate(BaseModel):
     amount: int
-    verification_code: str
     plan_id: int
     plan_type_id: int
 

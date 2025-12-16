@@ -1,16 +1,19 @@
-from flask import abort
-from .schema import SubscriptionCreate
-from app.models import Subscription, Payments
-from sqlalchemy.orm import joinedload
 from datetime import datetime, timedelta
-from app.modules.plans.service import getPlan, getPlanType
+from decimal import Decimal
+
+from flask import abort
+from sqlalchemy.orm import joinedload
 
 from app import logger
+from app.models import Payments, Subscription
+from app.modules.plans.service import getPlan, getPlanType
+from app.modules.subscriptions.schema import SubscriptionCreate
+
 
 def subscriptionPayment(payment_data, db):
     authorization_code= payment_data.get("authorization").get("authorization_code")
     reference= payment_data.get("reference")
-    plan_id= payment_data.get("metadata").get("plan_id")
+    plans_id= payment_data.get("metadata").get("plan_id")
     plan_type_id= payment_data.get("metadata").get("plan_type_id")
     user_id= payment_data.get("metadata").get("user_id")
     amount= payment_data.get("amount")
@@ -22,6 +25,7 @@ def subscriptionPayment(payment_data, db):
     db_payment = Payments(
         user_id= user_id,
         amount=amount,
+        
         verification_code=reference,
         status=payment_status,
     )
@@ -29,18 +33,26 @@ def subscriptionPayment(payment_data, db):
     db.session.commit()
     db.session.refresh(db_payment)
     
-    if subscription_plan_type.price != amount:
-        logger.warning(f"User with id {user_id} is trying to subscripe to plan id \
-                       {plan_id} with non equivalent price")
+    plan_price = Decimal(str(subscription_plan_type.get("price", 0)))
+    expected_amount = int(plan_price * 100)
+
+    if expected_amount != int(amount):
+        logger.warning(
+            "User with id %s is trying to subscribe to plan id %s "
+            "with mismatched price: expected %s, got %s",
+            user_id, plans_id, expected_amount, amount
+        )
         status = "invalid"
-    period = subscription_plan_type.period
+    period = subscription_plan_type.get("period")
     subscription = SubscriptionCreate(
+        user_id = user_id,
         currency = currency,
         authorization_code = authorization_code,
-        plan_id = plan_id,
+        plans_id = plans_id,
         plan_type_id = plan_type_id,
         status = status,
-        next_billing_date = datetime.utcnow() + timedelta(days= 30 * period)
+        next_billing_date = (datetime.utcnow() + timedelta(days=30 * period)).date()
+
     )
     return createSubscription(subscription, db, user_id)
 
@@ -54,13 +66,13 @@ def createSubscription(subscription: SubscriptionCreate, db, user_id):
         db.session.commit()
         db.session.refresh(old_active_subscription)
 
-    subscription_plan = getPlan(subscription.plan_id, db)
+    subscription_plan = getPlan(subscription.plans_id, db)
     subscription_plan_type = getPlanType(subscription.plan_type_id, db)
 
     db_subscription = Subscription(
         user_id = user_id,
         authorization_code = subscription.authorization_code,
-        plans_id = subscription.plan_id,
+        plans_id = subscription.plans_id,
         plan_type_id = subscription.plan_type_id,
         status = subscription.status,
         currency = subscription.currency,

@@ -10,8 +10,14 @@ COPY . /app
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Create a non-root user and set permissions
+RUN useradd -m appuser && chown -R appuser /app
+
+# Switch to non-root user
+USER appuser
+
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
 
 # Run Gunicorn to serve the Flask app
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "wsgi:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "wsgi:app"]

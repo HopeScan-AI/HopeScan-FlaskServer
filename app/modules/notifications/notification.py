@@ -1,7 +1,9 @@
 from flask import Blueprint, jsonify
-from flask_jwt_extended import jwt_required, get_current_user
-from .service import get_notifications, mark_as_read, create
+from flask_jwt_extended import get_current_user, jwt_required
+
 from app import db
+from app.modules.notifications.service import (create, get_notifications,
+                                               mark_as_read)
 
 bp = Blueprint('notification', __name__, url_prefix='/notification')
 

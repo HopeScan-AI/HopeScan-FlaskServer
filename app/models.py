@@ -1,8 +1,11 @@
-from app import db
-from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, Date, ForeignKey, Text, Double
-from sqlalchemy.sql import func
 from datetime import datetime, timedelta
+
+from sqlalchemy import (Boolean, Column, Date, DateTime, Double, ForeignKey,
+                        Integer, String, Text)
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+
+from app import db
 
 
 class User(db.Model):
@@ -32,7 +35,6 @@ class User(db.Model):
 
     def as_dict(self):
         user_dict =  {col.name: getattr(self, col.name) for col in self.__table__.columns}
-        # print(self.health_provider)
         
         user_dict["providers"] =[
             {**provider.as_dict()}
@@ -66,7 +68,6 @@ class Case(db.Model):
         case_dict = {col.name: getattr(self, col.name) for col in self.__table__.columns}
         case_dict['create_date_without_time'] = self.create_date_without_time
 
-        # Include creator details
         case_dict['creator'] = {
             "id": self.creator.id,
             "name": self.creator.name,
@@ -95,7 +96,6 @@ class Image(db.Model):
     diagnose = Column(String(500), nullable=True)
     comments = Column(Text, nullable=True)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
-    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
     updated_at = Column(DateTime, nullable=True)
     case_id = Column(Integer, ForeignKey('cases.id'))
     case = relationship("Case", back_populates="images")
@@ -187,13 +187,13 @@ class Subscription(db.Model):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     user = relationship('User', back_populates='subscription')
-    authorization_code = Column(String(255), nullable=False)  # Lahza authorization code
+    authorization_code = Column(String(255), nullable=False)
     plans_id = Column(String(100), ForeignKey('plans.id'), nullable=False)
     plans = relationship('Plans', back_populates='subscription')
     plan_type_id = Column(String(100), ForeignKey('plan_type.id'), nullable=False)
     plan_type = relationship('PlanType', back_populates='subscription')
     currency = Column(String(10), default="USD")
-    status = Column(String(50), default="active")  # active, canceled, expired
+    status = Column(String(50), default="active")
     start_date = Column(DateTime, default=datetime.utcnow)
     next_billing_date = Column(DateTime, default=datetime.utcnow() + timedelta(days=30))
     images_count = Column(Integer, default=0)

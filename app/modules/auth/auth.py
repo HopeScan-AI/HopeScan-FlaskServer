@@ -1,23 +1,17 @@
-from flask import Blueprint, request, jsonify
-from sqlalchemy.exc import SQLAlchemyError
-from app.modules.user.service import (
-    get_user_by_email,
-    create,
-    # set_verification_code,
-    # get_verification_code,
-    # verify_account,
-)
-from app.modules.user.schema import UserCreate
-from .schema import LoginRequest, VerificationRequest
 import os
-# from email.message import EmailMessage
-# import random
-# import smtplib
 from datetime import timedelta
-from app import db
-from app import bcrypt
-from flask_jwt_extended import jwt_required, unset_access_cookies, create_access_token, get_jwt_identity, set_access_cookies
+
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import (create_access_token, get_jwt_identity,
+                                jwt_required, set_access_cookies,
+                                unset_access_cookies)
+from sqlalchemy.exc import SQLAlchemyError
+
+from app import bcrypt, db
+from app.modules.auth.schema import LoginRequest, VerificationRequest
 from app.modules.providers.service import get_owners
+from app.modules.user.schema import UserCreate
+from app.modules.user.service import create, get_user_by_email
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -32,10 +26,7 @@ def signup_user():
 
         email_exist = get_user_by_email(email, db)
         if email_exist:
-            # if email_exist.is_verified:
             return jsonify({"error": "Email already exists."}), 400
-            # else:
-            #     return jsonify({"error": "Email already exists but not verified."}), 400
 
         user.is_verified = True
         db_user = create(user, db, "email")
@@ -59,7 +50,7 @@ def login_for_access_token():
 
         access_token = create_access_token(
             identity=db_user,
-            expires_delta=timedelta(minutes=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")))
+            expires_delta=timedelta(minutes=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 180)))
         )
         owners = get_owners(db_user.id, db)
         response = jsonify(access_token=access_token, user=db_user.as_dict())
@@ -68,53 +59,6 @@ def login_for_access_token():
     except Exception as e:
         print(e)
         return jsonify({"error": f"An unexpected error occurred. {e}"}), 500
-
-
-# @bp.post("/send-verification-code")
-# def send_verification_code():
-#     try:
-#         email = request.json.get("email")
-#         role = request.json.get("role")
-#         if not email:
-#             return jsonify({"error": "Email is required"}), 400
-#         if role == "institution":
-#             return jsonify({"message": "Your Account will be reviewed by Admins to approve"})
-#         code = f"{random.randint(100000, 999999)}"
-#         set_verification_code(email, code, db)
-
-#         message = EmailMessage()
-#         message["From"] = "hopescan@gmail.com"
-#         message["To"] = email
-#         message["Subject"] = "Account Verification Code"
-#         message.set_content(f"Your verification code is: {code}")
-
-#         with smtplib.SMTP("smtp.gmail.com", 587) as server:
-#             server.starttls()
-#             server.login("famaliha2@gmail.com", "zyts xuvw tysz fszg")  # Use a secure app password
-#             server.send_message(message)
-
-#         return jsonify({"message": "Verification code sent, check spam"})
-#     except Exception as e:
-#         return jsonify({"error": f"Failed to send email: {str(e)}"}), 500
-
-
-# @bp.post("/verify-code")
-# def verify_code():
-#     try:
-#         verification_data = VerificationRequest(**request.json)
-        
-#         stored_code = get_verification_code(verification_data.email, db)
-#         if not stored_code:
-#             return jsonify({"error": "No code sent to this email."}), 400
-
-#         if stored_code != verification_data.code:
-#             return jsonify({"error": "Invalid verification code."}), 400
-
-#         verify_account(verification_data.email, db)
-#         return jsonify({"message": "Email verified successfully!"})
-#     except Exception as e:
-#         return jsonify({"error": f"An unexpected error occurred. {e}"}), 500
-
 
 
 @bp.post("/logout")

@@ -18,4 +18,3 @@
 
 > `app/dist` directory is automatically updated once the FrontEnd repo is updated.  [FrontEnd Repo](https://github.com/MohammedHasan-99/HopeScan-FlaskServer) 
 
-"# HopeScan-FlaskServer" 

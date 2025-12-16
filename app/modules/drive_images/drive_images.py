@@ -1,9 +1,10 @@
-from flask import Blueprint, request, jsonify
-from .service import store_images_db, get_images_with_diagnoses_paginated, get_images_not_diagnosed, add_doctor_diagnose, get_results, get_different_results
-from .schema import DoctorDiagnoseCreate
-from flask_jwt_extended import jwt_required, get_current_user
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import get_current_user, jwt_required
 
-
+from app.modules.drive_images.schema import DoctorDiagnoseCreate
+from app.modules.drive_images.service import (
+    add_doctor_diagnose, get_different_results, get_images_not_diagnosed,
+    get_images_with_diagnoses_paginated, get_results, store_images_db)
 
 bp = Blueprint('drive_images', __name__, url_prefix='/drive-images')
 
@@ -53,7 +54,6 @@ def get_all():
         skip = int(request.args.get('skip', 0))
         limit = int(request.args.get('limit', 10000))
         images = get_images_with_diagnoses_paginated(skip, limit, user.id)
-        # images_dicts = [image.as_dict() for image in images]
         return jsonify(images)
     else:
         return jsonify({"errors": "UNAUTORIZED"}), 401

@@ -1,10 +1,9 @@
-from flask import Blueprint, request, jsonify
-from .schema import *
-from app import db, logger
-from .service import *
-from flask_jwt_extended import jwt_required, get_current_user
- 
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import get_current_user, jwt_required
 
+from app import db, logger
+from app.modules.plans.schema import *
+from app.modules.plans.service import *
 
 bp = Blueprint('plans', __name__, url_prefix='/plans')
 
@@ -25,7 +24,6 @@ def create_plan():
 
 
 @bp.get('/')
-# @jwt_required()
 def get_plans():
     try:
         plans = getPlans(db)
@@ -35,7 +33,6 @@ def get_plans():
         return jsonify({"errors": e.__str__()}), 500
 
 @bp.get('/<int:plan_id>')
-# @jwt_required()
 def get_plan(plan_id):
     try:
         plan = getPlan(plan_id, db)

@@ -1,8 +1,8 @@
-from pydantic import BaseModel
-from typing import Optional, List
 from datetime import date
-# from app.models import PlanType
-from typing import List, Any
+from typing import Any, List, Optional
+
+from pydantic import BaseModel
+
 
 class PlanTypeCreate(BaseModel):
     name: str
@@ -23,7 +23,6 @@ class PlanCreate(BaseModel):
     image_cost: float
     num_of_providers: int
     plan_type: List[Any]
-    # plan_types: List[PlanTypeCreate]
     icon: str
 
 
@@ -33,6 +32,5 @@ class PlanUpdate(BaseModel):
     plan_type: Optional [List[Any]] = []
     name_arabic: Optional[str] = None
     image_cost: Optional[float] = None
-    # plan_type: Optional[PlanTypeCreate] = []
     icon:  Optional[str] = None
 

@@ -1,8 +1,10 @@
 from flask import abort
-from app.models import User
-from app.utils import hash_password
-from .schema import UserCreate
+
 from app import jwt
+from app.models import User
+from app.modules.user.schema import UserCreate
+from app.utils import hash_password
+
 
 @jwt.user_identity_loader
 def user_identity_lookup(user):

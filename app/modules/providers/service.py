@@ -1,7 +1,8 @@
 from flask import abort
-from app.models import HealthProvider
-from .schema import ProviderCreate
 from sqlalchemy.orm import joinedload
+
+from app.models import HealthProvider
+from app.modules.providers.schema import ProviderCreate
 
 
 def create(user_id, provider_id, db):
@@ -51,9 +52,7 @@ def get_owners(provider_id, db):
     .filter(HealthProvider.status == 'accepted')\
     .all()
     
-    # return owners
     return [
-        # print(owner, owner.as_dict()) for owner in owners
         owner.as_dict() for owner in owners
     ]
 

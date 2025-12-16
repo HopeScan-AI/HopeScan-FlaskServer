@@ -1,12 +1,13 @@
-from googleapiclient.discovery import build
-from google.oauth2 import service_account
-from flask import abort
-from app.models import DriveImage, DoctorDiagnose
-from app import db
 import re
-from sqlalchemy.dialects.sqlite import insert
 from math import ceil
 
+from flask import abort
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from sqlalchemy.dialects.sqlite import insert
+
+from app import db
+from app.models import DoctorDiagnose, DriveImage
 
 SCOPES = ['https://www.googleapis.com/auth/drive']
 SERVICE_ACCOUNT_FILE = 'pelagic-program-445912-r3-b33eeec4dbea.json'
@@ -107,12 +108,11 @@ def get_images_with_diagnoses_paginated(skip, limit, user_id):
         .all()
     )
 
-    # Transform results into a list of dictionaries
     images_with_diagnoses = [
         {
             "image_id": result.image_id,
             "image_name": result.image_name,
-            "diagnose": result.diagnose or "Not diagnosed",  # Handle images without a diagnose
+            "diagnose": result.diagnose or "Not diagnosed",
         }
         for result in results
     ]
@@ -164,10 +164,8 @@ def add_doctor_diagnose(doctor_diagnose):
         )
         db.session.add(db_doctor_diagnose)
 
-    # Commit the transaction
     db.session.commit()
 
-    # Refresh the mapped instance to ensure it has the latest data
     db.session.refresh(db_doctor_diagnose)
 
     return db_doctor_diagnose
